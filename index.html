@@ -1,0 +1,165 @@
+
+<head>
+    
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #6B7A8F;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        .calculator {
+            background-color: #2E3B4E;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .display {
+            background-color: #2E3B4E;
+            color: white;
+            font-size: 2.5em;
+            text-align: right;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            background-color: #3A4A5F;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.5em;
+            padding: 20px;
+            cursor: pointer;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .button.operator {
+            color: #F9A825;
+        }
+        .button:active {
+            box-shadow: none;
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="button" onclick="clearDisplay()">AC</button>
+            <button class="button" onclick="toggleSign()">±</button>
+            <button class="button" onclick="input('%')">%</button>
+            <button class="button operator" onclick="input('/')">÷</button>
+            <button class="button" onclick="input('7')">7</button>
+            <button class="button" onclick="input('8')">8</button>
+            <button class="button" onclick="input('9')">9</button>
+            <button class="button operator" onclick="input('*')">×</button>
+            <button class="button" onclick="input('4')">4</button>
+            <button class="button" onclick="input('5')">5</button>
+            <button class="button" onclick="input('6')">6</button>
+            <button class="button operator" onclick="input('-')">−</button>
+            <button class="button" onclick="input('1')">1</button>
+            <button class="button" onclick="input('2')">2</button>
+            <button class="button" onclick="input('3')">3</button>
+            <button class="button operator" onclick="input('+')">+</button>
+            <button class="button" style="grid-column: span 2;" onclick="input('0')">0</button>
+            <button class="button" onclick="input('.')">.</button>
+            <button class="button operator" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentInput = '';
+        let operator = '';
+        let firstOperand = null;
+
+        function input(value) {
+            if (['+', '-', '*', '/'].includes(value)) {
+                if (currentInput !== '') {
+                    if (firstOperand === null) {
+                        firstOperand = parseFloat(currentInput);
+                    } else {
+                        firstOperand = operate(firstOperand, parseFloat(currentInput), operator);
+                    }
+                }
+                operator = value;
+                currentInput = '';
+            } else if (value === '%') {
+                currentInput = (parseFloat(currentInput) / 100).toString();
+            } else {
+                currentInput += value;
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            operator = '';
+            firstOperand = null;
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            if (currentInput) {
+                currentInput = (parseFloat(currentInput) * -1).toString();
+                updateDisplay();
+            }
+        }
+
+        function calculate() {
+            if (firstOperand !== null && operator && currentInput !== '') {
+                currentInput = operate(firstOperand, parseFloat(currentInput), operator).toString();
+                firstOperand = null;
+                operator = '';
+                updateDisplay();
+            }
+        }
+
+        function operate(a, b, op) {
+            switch (op) {
+                case '+':
+                    return a + b;
+                case '-':
+                    return a - b;
+                case '*':
+                    return a * b;
+                case '/':
+                    return a / b;
+                default:
+                    return b;
+            }
+        }
+
+        function updateDisplay() {
+            display.textContent = currentInput || '0';
+        }
+    </script>
+</body>
+</html>
